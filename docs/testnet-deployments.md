@@ -1,67 +1,69 @@
 # Testnet Smart Contract Addresses
 
--   [Arbitrum Sepolia Testnet](#Arbitrum-sepolia-testnet)
--   [Bob Testnet](#Bob-testnet)
--   [Linea Testnet](#Linea-testnet)
--   [Base Sepolia Testnet](#Base-sepolia-testnet)
--   [Polygon Amoy Testnet](#Polygon-amoy-testnet)
--   [Holesky Testnet](#Holesky-testnet)
--   [Citrea Testnet](#Citrea-testnet)
--   [Lorenzo Testnet](#Lorenzo-testnet)
--   [Bitlayer Testnet](#Bitlayer-testnet)
--   [BEVM Testnet](#BEVM-testnet)
--   [Avalanche Fuji Testnet](#Avalanche-fuji-testnet)
--   [Movement Lab Testnet](#Movement-lab-testnet)
--   [Berachain Testnet](#Berachain-testnet)
--   [Blast Testnet](#Blast-testnet)
--   [Scroll Testnet](#Scroll-testnet)
--   [Fluent Testnet](#Fluent-Testnet)
--   [Core chain Testnet](#Core-chain-testnet)
--   [Zetachain Testnet](#Zetachain-Testnet)
--   [Filecoin Testnet](#Filecoin-Testnet)
--   [Optimism Sepolia Testnet](#Optimism-Sepolia-Testnet)
--   [X Layer Testnet](#X-Layer-Testnet)
--   [OKX Testnet](#OkX-Testnet)
--   [Moonbase Alpha Testnet](#moonbase-alpha-testnet)
--   [Bnb Testnet](#Bnb-Testnet)
--   [Fantom Testnet](#Fantom-Testnet)
--   [StratoVM Sepolia Testnet](#stratovm-sepolia-testnet)
--   [Godwoken Testnet](#Godwoken-testnet)
--   [Morph Testnet](#morph-testnet)
--   [Aurora Testnet](#Aurora-Testnet)
--   [Soneium Minato Testnet](#Soneium-Minato-Testnet)
--   [Rootstock Testnet](#rootstock-testnet)
--   [Ethereum Sepolia Testnet](#Ethereum-Sepolia-Testnet)
--   [Polygon zkEVM Cardona Testnet](#polygon-zkevm-cardona-testnet)
--   [Merlin Testnet](#merlin-testnet)
--   [Manta Pacific Sepolia Testnet](#Manta-Pacific-Sepolia-Testnet)
--   [Plume-Devnet](#Plume-Devnet)
+- [Testnet Smart Contract Addresses](#testnet-smart-contract-addresses)
+  - [Arbitrum Sepolia Testnet](#arbitrum-sepolia-testnet)
+  - [Bob Testnet](#bob-testnet)
+  - [Linea Testnet](#linea-testnet)
+  - [Base Sepolia Testnet](#base-sepolia-testnet)
+  - [Polygon Amoy Testnet](#polygon-amoy-testnet)
+  - [Holesky Testnet](#holesky-testnet)
+  - [Citrea Testnet](#citrea-testnet)
+  - [Lorenzo Testnet](#lorenzo-testnet)
+  - [Bitlayer Testnet](#bitlayer-testnet)
+  - [BEVM Testnet](#bevm-testnet)
+  - [Avalanche Fuji Testnet](#avalanche-fuji-testnet)
+  - [Movement Lab Testnet](#movement-lab-testnet)
+  - [Berachain Testnet](#berachain-testnet)
+  - [Blast Testnet](#blast-testnet)
+  - [Scroll Testnet](#scroll-testnet)
+  - [Core chain Testnet](#core-chain-testnet)
+  - [Fluent Testnet](#fluent-testnet)
+  - [Zetachain Testnet](#zetachain-testnet)
+  - [Filecoin Testnet](#filecoin-testnet)
+  - [Optimism Sepolia Testnet](#optimism-sepolia-testnet)
+  - [X Layer Testnet](#x-layer-testnet)
+  - [Okx Testnet](#okx-testnet)
+  - [Moonbase Alpha Testnet](#moonbase-alpha-testnet)
+  - [Bnb Testnet](#bnb-testnet)
+  - [Fantom Testnet](#fantom-testnet)
+  - [StratoVM Sepolia Testnet](#stratovm-sepolia-testnet)
+  - [Godwoken testnet](#godwoken-testnet)
+  - [Morph Holesky Testnet](#morph-holesky-testnet)
+  - [Aurora Testnet](#aurora-testnet)
+  - [Soneium Minato Testnet](#soneium-minato-testnet)
+  - [Rootstock Testnet](#rootstock-testnet)
+  - [Ethereum Sepolia Testnet](#ethereum-sepolia-testnet)
+  - [Polygon zkEVM Cardona Testnet](#polygon-zkevm-cardona-testnet)
+  - [Merlin Testnet](#merlin-testnet)
+  - [Manta Pacific Sepolia Testnet](#manta-pacific-sepolia-testnet)
+  - [Plume Devnet](#plume-devnet)
 
 ## Arbitrum Sepolia Testnet
 
 | Core Contracts     | Address                                    |
 | ------------------ | ------------------------------------------ |
-| BimaCore           | 0x466C92d5bf1Adc11D62e08e3CAae6DB2b7D42A85 |
-| PriceFeed          | 0xEdd95b1325140Eb6c06d8C738DE98accb2104dFB |
-| FeeReceiver        | 0x5622b9036d762979FF50b3B131ad3F9a1Dc4c1A2 |
-| InterimAdmin       | 0x8b6a055BcF85203e320A62b0D1baEbBa0AA5ef13 |
-| Gas Pool           | 0x340460Fdf8b8173fBfA0Ede60c0E013dF23bc81A |
-| Factory            | 0xbDC10467B80C8CF86243D818c10a23Da6af85f2B |
-| LiquidationManager | 0x4B2e2E04CeF598cAE566359897559B2cF6678d3f |
-| DebtToken          | 0x5F4aF136342B4A56fB2dAb7B8a453F9CB8900663 |
-| BorrowerOperations | 0x98cb20D30da0389028EB71eF299B688979F5cB8b |
-| StabilityPool      | 0x4608fb6aBCf7841855A8E797B7E1fc08Ab9a1E67 |
-| TroveManager       | 0x6539C23868dc9Ac70f78a6034af853476477BcEc |
-| SortedTroves       | 0x96F0EaCF9097fcEA88bDe9de3f7E8B215f6757Df |
-| TokenLocker        | 0x0bA523Cd5Aa725C66C3FE015BD52e7A16D3Fdb32 |
-| IncentiveVoting    | 0xEc63b8a3a2402892d3E6AB97b89CF47132a29dAa |
-| BimaToken          | 0x0BB0aA6Aa3A3FD4F7a43FB5e3d90bF9e6B4ef799 |
-| BimaVault          | 0x15e47CF518073bd980f10a1064231db14238858A |
+| BimaCore           | 0x0B446824fc53b7898DCcAE72743Ac4c1AD3c2Af7 |
+| PriceFeed          | 0xe128DA406fAEDd16a08702726B52E10B8C7A8587 |
+| FeeReceiver        | 0xc13265Cb35a63aCe3BBd8dF5C249551355070321 |
+| InterimAdmin       | 0xDbB15AC4e44b999eFaeDA902A4f8F59bF881382B |
+| Gas Pool           | 0xe05295f7be167a9bFfEd5b0a4626b42dEdDC955f |
+| Factory            | 0x7adAF14C8E26564dE61BDFcD0d4448db02F7B72D |
+| LiquidationManager | 0x3175c8E8C107c34D69D6884e1CC9c240B227Db06 |
+| DebtToken          | 0x9a64371655872B16395342B0C7A27C16d9eaC78e |
+| BorrowerOperations | 0xb50b156c2f9418DE5c38Ca9070Ef2c3FA5e1AFA2 |
+| StabilityPool      | 0xA385C1494F7540CF3e6e35C0FBcCab2Fa6696C9C |
+| TroveManager       | 0xb3A2c6ca9093Aaf13f752735E0759e3cA17002E3 |
+| SortedTroves       | 0xF2f5354B51AcF096df9eCaeBfEEF050922FaDf49 |
+| TokenLocker        | 0x1503e25A71923A6d349a1a267ABC82587B11be6d |
+| IncentiveVoting    | 0x01A4B3221E078106F9eb60C5303E3BA162F6a92e |
+| BimaToken          | 0x2B9eB679Aeb4Ede15D7ad14E78AD6eA0500a4d6b |
+| BimaVault          | 0xc0b21504aBf9a523a6E795d38Cac70e7fdcDAbB4 |
+| BimaFaucet         | 0xc38B60716E634080d95eB8a921D4CFd07CeD881E |
 
 | Collateral Name | Collateral Address                         | TroveManager Address                       | Oracle Address (Chainlink)                 |
 | --------------- | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
-| Bima Mock BTC   | 0xE20B0B5E240910Ca1461893542C6F226793aAD25 | 0x1B2f879Ab2a3eB125a650cd53a6964052cf53613 | 0x56a43EB56Da12C0dc1D972ACb089c06a5dEF8e69 |
-| aBTC            | 0xeFcb867D484CE645766F09d8F67561b838Bb3FFd | 0x811d08B09a0FFB0cEA34472523770Bef30297259 | 0x56a43EB56Da12C0dc1D972ACb089c06a5dEF8e69 |
+| Bima Mock BTC   | 0xE20B0B5E240910Ca1461893542C6F226793aAD25 | 0xb28FEFe4680E3ee6b6A5eb4Bb3AfDf58C71aed76 | 0x56a43EB56Da12C0dc1D972ACb089c06a5dEF8e69 |
+
 
 ## Bob Testnet
 
@@ -120,27 +122,27 @@
 
 | Contract           | Address                                    |
 | ------------------ | ------------------------------------------ |
-| BimaCore           | 0x98cb20D30da0389028EB71eF299B688979F5cB8b |
-| PriceFeed          | 0x4608fb6aBCf7841855A8E797B7E1fc08Ab9a1E67 |
-| FeeReceiver        | 0x6539C23868dc9Ac70f78a6034af853476477BcEc |
-| InterimAdmin       | 0x96F0EaCF9097fcEA88bDe9de3f7E8B215f6757Df |
-| GasPool            | 0xEc63b8a3a2402892d3E6AB97b89CF47132a29dAa |
-| Factory            | 0x0BB0aA6Aa3A3FD4F7a43FB5e3d90bF9e6B4ef799 |
-| LiquidationManager | 0x15e47CF518073bd980f10a1064231db14238858A |
-| DebtToken          | 0xE20B0B5E240910Ca1461893542C6F226793aAD25 |
-| BorrowerOperations | 0xd296Ea42A6dBbd171025d6087AAe4dBFBfc7c70d |
-| StabilityPool      | 0x75e30CE7c54569eD628592970ddf92980adcF1B0 |
-| TroveManager       | 0xcFd7Fc6D664FFcc2FC74b68C321ECd6a400d2118 |
-| SortedTroves       | 0x73A991e3cDFF08E729F2e663Da33A975f521FdEc |
-| TokenLocker        | 0xacBce5cFD3703E6F6e59f596deF42feDBCfD964E |
-| IncentiveVoting    | 0x9540dd2AF8242518562101b42D71Ce2ec169A5a3 |
-| BimaToken          | 0xEd0Ac2EEA2cEC5C27E509e29814574603587f682 |
-| BimaVault          | 0xE66E60c64d7295e5CB5d1C00A3531ff33e8B09ce |
+| BimaCore           | 0x6B7Bfc6880f3ca892E0f1800bf1F5bc58Cd560b1 |
+| PriceFeed          | 0xE10e3B519e0222A0C973B062A1760f8fb67676E0 |
+| FeeReceiver        | 0xe8ce5A9A4B8f64E7e91a1d640E2661c5897492D6 |
+| InterimAdmin       | 0x911450A656185B2F3CAc631c7a0e9b653dfe335f |
+| GasPool            | 0x5b6785476bC7834bfEd85e74A79aC3a144affB31 |
+| Factory            | 0xC3b8593869Be9f8c4154015AF1CDb69f0B6f0949 |
+| LiquidationManager | 0xac392ef4106EBE101D5Baee573a8Ff0471c5Cd37 |
+| DebtToken          | 0x678Ed24ec99e569B502B1D34001852f0595BD2df |
+| BorrowerOperations | 0xaDBf99AD3d108220576d3B2aAF8B955de2729364 |
+| StabilityPool      | 0xc13265Cb35a63aCe3BBd8dF5C249551355070321 |
+| TroveManager       | 0x0B446824fc53b7898DCcAE72743Ac4c1AD3c2Af7 |
+| SortedTroves       | 0x80E4C64dE6733dAa9784b4667CA471a8E9aA2FDd |
+| TokenLocker        | 0xe128DA406fAEDd16a08702726B52E10B8C7A8587 |
+| IncentiveVoting    | 0xDbB15AC4e44b999eFaeDA902A4f8F59bF881382B |
+| BimaToken          | 0x2288125D557B9E0f3dC84731Ab57bEf60af47fbF |
+| BimaVault          | 0xe05295f7be167a9bFfEd5b0a4626b42dEdDC955f |
 | BimaFaucet         | 0x6B7Bfc6880f3ca892E0f1800bf1F5bc58Cd560b1 |
 
 | Collateral Name | Collateral Address                         | TroveManager Address                       | Oracle Address (Chainlink)                 |
 | --------------- | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
-| Bima Mock BTC   | 0x6EE35974e29F9F53E051B00EAcc153552fC87dbb | 0x3C2A62172F88400E344eb09Df775fFC232EE51d3 | 0x0FB99723Aee6f420beAD13e6bBB79b7E6F034298 |
+| Bima Mock BTC   | 0x6EE35974e29F9F53E051B00EAcc153552fC87dbb | 0xBB6b5A6d8Eef7280c2816C79A71DCF8503273CFa | 0x0FB99723Aee6f420beAD13e6bBB79b7E6F034298 |
 
 ## Polygon Amoy Testnet
 
@@ -249,28 +251,27 @@
 
 | Contract           | Address                                    |
 | ------------------ | ------------------------------------------ |
-| BimaCore           | 0xC3b8593869Be9f8c4154015AF1CDb69f0B6f0949 |
-| PriceFeed          | 0xac392ef4106EBE101D5Baee573a8Ff0471c5Cd37 |
-| FeeReceiver        | 0x678Ed24ec99e569B502B1D34001852f0595BD2df |
-| InterimAdmin       | 0xaDBf99AD3d108220576d3B2aAF8B955de2729364 |
-| Gas Pool           | 0x0B446824fc53b7898DCcAE72743Ac4c1AD3c2Af7 |
-| Factory            | 0xe128DA406fAEDd16a08702726B52E10B8C7A8587 |
-| LiquidationManager | 0xDbB15AC4e44b999eFaeDA902A4f8F59bF881382B |
-| DebtToken          | 0x2288125D557B9E0f3dC84731Ab57bEf60af47fbF |
-| BorrowerOperations | 0xe05295f7be167a9bFfEd5b0a4626b42dEdDC955f |
-| StabilityPool      | 0xF2f5354B51AcF096df9eCaeBfEEF050922FaDf49 |
-| TroveManager       | 0x7adAF14C8E26564dE61BDFcD0d4448db02F7B72D |
-| SortedTroves       | 0x3175c8E8C107c34D69D6884e1CC9c240B227Db06 |
-| TokenLocker        | 0x9a64371655872B16395342B0C7A27C16d9eaC78e |
-| IncentiveVoting    | 0xb50b156c2f9418DE5c38Ca9070Ef2c3FA5e1AFA2 |
-| BimaToken          | 0xA385C1494F7540CF3e6e35C0FBcCab2Fa6696C9C |
-| BimaVault          | 0xb3A2c6ca9093Aaf13f752735E0759e3cA17002E3 |
+| BimaCore           | 0x7b3cFc6d6692D9A1574DfC539a7b45B516b8e0Dc |
+| PriceFeed          | 0x0d1a956cceF81740BfAF3580A34CDFdA7b576c30 |
+| FeeReceiver        | 0xA05DeA13130344bB773C062d29f6f2c09d856D3f |
+| InterimAdmin       | 0x29056E406ecbc0b05d1D86E4220130E5fE2EF995 |
+| Gas Pool           | 0x45b49B96F9beeAd93f79079F5ada63983F217fcc |
+| Factory            | 0x546173608aF50d7bA870451070E0D2E6E0C2848d |
+| LiquidationManager | 0x07228A448828AA8adA1223529013DA5f77329F80 |
+| DebtToken          | 0x165d03D3Df6443B87b4B7a6268fd13d37C5e3127 |
+| BorrowerOperations | 0xC6D5887EBD12290bC11cAe4f3a41232D459b6d42 |
+| StabilityPool      | 0xaC63A28044200Ceb0ff005725E65a2E431D7Eedf |
+| TroveManager       | 0x5F6ebf04e753aE3E1d4b47085Ca34558D7aB427E |
+| SortedTroves       | 0x7a8f8685dA403b4AA0Ea964aD3dbE8771f0F9E2b |
+| TokenLocker        | 0x6E7d642328668Da5fa91C0a89d582F096384032c |
+| IncentiveVoting    | 0x1EE4D39f49F546Cf878E504D67b7D7ee3198f36d |
+| BimaToken          | 0x25920221ff112bb8902Bc0A82a6A8744717A8323 |
+| BimaVault          | 0x6F92d73d79b67094598b993f56bb506E9c44F951 |
 | BimaFaucet         | 0x0E9B3208BBc81C18ED32a72e6Aa9505bfeB85eD9 |
 
 | Collateral Name | Collateral Address                         | TroveManager Address                       | Oracle Address (Stork Wrapper)             |
 | --------------- | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
-| uniBTC          | 0x16221CaD160b441db008eF6DA2d3d89a32A05859 | 0x7fa611d05cDA27E7c6a1B030721d7781F15e19cb | 0x1503e25A71923A6d349a1a267ABC82587B11be6d |
-| Bima Mocked BTC | 0x691F17519E79866b5f1f6963D7Ed860900f8508a | 0x5458BBB093Ee676d118da44b95124C687D8F574a | 0x1503e25A71923A6d349a1a267ABC82587B11be6d |
+| Bima Mocked BTC | 0x691F17519E79866b5f1f6963D7Ed860900f8508a | 0x55796b02a7650C9fEF78bC2E73De1EF6dA719283 | 0x1503e25A71923A6d349a1a267ABC82587B11be6d |
 
 ## BEVM Testnet
 
@@ -430,27 +431,27 @@
 
 | Contract           | Address                                    |
 | ------------------ | ------------------------------------------ |
-| BimaCore           | 0x5622b9036d762979FF50b3B131ad3F9a1Dc4c1A2 |
-| PriceFeed          | 0x8b6a055BcF85203e320A62b0D1baEbBa0AA5ef13 |
-| FeeReceiver        | 0xD4DE601BB7CBb14DC3623128706E465Fa1CC2027 |
-| InterimAdmin       | 0x340460Fdf8b8173fBfA0Ede60c0E013dF23bc81A |
-| Gas Pool           | 0x4B2e2E04CeF598cAE566359897559B2cF6678d3f |
-| Factory            | 0x5F4aF136342B4A56fB2dAb7B8a453F9CB8900663 |
-| LiquidationManager | 0x98cb20D30da0389028EB71eF299B688979F5cB8b |
-| DebtToken          | 0x4608fb6aBCf7841855A8E797B7E1fc08Ab9a1E67 |
-| BorrowerOperations | 0x6539C23868dc9Ac70f78a6034af853476477BcEc |
-| StabilityPool      | 0x96F0EaCF9097fcEA88bDe9de3f7E8B215f6757Df |
-| TroveManager       | 0x0bA523Cd5Aa725C66C3FE015BD52e7A16D3Fdb32 |
-| SortedTroves       | 0xEc63b8a3a2402892d3E6AB97b89CF47132a29dAa |
-| TokenLocker        | 0x0BB0aA6Aa3A3FD4F7a43FB5e3d90bF9e6B4ef799 |
-| IncentiveVoting    | 0x15e47CF518073bd980f10a1064231db14238858A |
-| BimaToken          | 0xE20B0B5E240910Ca1461893542C6F226793aAD25 |
-| BimaVault          | 0xd296Ea42A6dBbd171025d6087AAe4dBFBfc7c70d |
+| BimaCore           | 0x5F94BAa95341CfCAE98cfc5480BCa38FcB132740 |
+| PriceFeed          | 0x7Bb3a6d55DF48d7B5A9419712743e326235e3887 |
+| FeeReceiver        | 0x6EE35974e29F9F53E051B00EAcc153552fC87dbb |
+| InterimAdmin       | 0x1f21E97cb89b03C414846ebffb482076753399C3 |
+| Gas Pool           | 0xe8ce5A9A4B8f64E7e91a1d640E2661c5897492D6 |
+| Factory            | 0xE10e3B519e0222A0C973B062A1760f8fb67676E0 |
+| LiquidationManager | 0x911450A656185B2F3CAc631c7a0e9b653dfe335f |
+| DebtToken          | 0x05b5044984747e8FB4D1B4837Ad4bD4Fd8b78428 |
+| BorrowerOperations | 0x5b6785476bC7834bfEd85e74A79aC3a144affB31 |
+| StabilityPool      | 0x80E4C64dE6733dAa9784b4667CA471a8E9aA2FDd |
+| TroveManager       | 0xC3b8593869Be9f8c4154015AF1CDb69f0B6f0949 |
+| SortedTroves       | 0x6B7Bfc6880f3ca892E0f1800bf1F5bc58Cd560b1 |
+| TokenLocker        | 0xac392ef4106EBE101D5Baee573a8Ff0471c5Cd37 |
+| IncentiveVoting    | 0x678Ed24ec99e569B502B1D34001852f0595BD2df |
+| BimaToken          | 0xaDBf99AD3d108220576d3B2aAF8B955de2729364 |
+| BimaVault          | 0xc13265Cb35a63aCe3BBd8dF5C249551355070321 |
 | BimaFaucet         | 0x9540dd2AF8242518562101b42D71Ce2ec169A5a3 |
 
 | Collateral Name | Collateral Address                         | TroveManager Address                       | Oracle Address (Stork Wrapper)             |
 | --------------- | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
-| Bima Mock BTC   | 0x75e30CE7c54569eD628592970ddf92980adcF1B0 | 0x72C56eD0D46364C08257F8502b7cf17CB8f596D6 | 0x4260121248Db5c3330A55A415A6A5C8aF4936182 |
+| Bima Mock BTC   | 0x75e30CE7c54569eD628592970ddf92980adcF1B0 | 0xb00efC873F242c60925E61B9d615170f9f55372F | 0x4260121248Db5c3330A55A415A6A5C8aF4936182 |
 
 ## Fluent Testnet
 
@@ -840,29 +841,27 @@
 
 | Core Contracts     | Address                                    |
 | ------------------ | ------------------------------------------ |
-| BimaCore           | 0x96F0EaCF9097fcEA88bDe9de3f7E8B215f6757Df |
-| PriceFeed          | 0x0bA523Cd5Aa725C66C3FE015BD52e7A16D3Fdb32 |
-| FeeReceiver        | 0xEc63b8a3a2402892d3E6AB97b89CF47132a29dAa |
-| InterimAdmin       | 0x0BB0aA6Aa3A3FD4F7a43FB5e3d90bF9e6B4ef799 |
-| Gas Pool           | 0xE20B0B5E240910Ca1461893542C6F226793aAD25 |
-| Factory            | 0xd296Ea42A6dBbd171025d6087AAe4dBFBfc7c70d |
-| LiquidationManager | 0x75e30CE7c54569eD628592970ddf92980adcF1B0 |
-| DebtToken          | 0xcFd7Fc6D664FFcc2FC74b68C321ECd6a400d2118 |
-| BorrowerOperations | 0x73A991e3cDFF08E729F2e663Da33A975f521FdEc |
-| StabilityPool      | 0xacBce5cFD3703E6F6e59f596deF42feDBCfD964E |
-| TroveManager       | 0x9540dd2AF8242518562101b42D71Ce2ec169A5a3 |
-| SortedTroves       | 0xEd0Ac2EEA2cEC5C27E509e29814574603587f682 |
-| TokenLocker        | 0xE66E60c64d7295e5CB5d1C00A3531ff33e8B09ce |
-| IncentiveVoting    | 0x6EE35974e29F9F53E051B00EAcc153552fC87dbb |
-| BimaToken          | 0x5F94BAa95341CfCAE98cfc5480BCa38FcB132740 |
-| BimaVault          | 0x7Bb3a6d55DF48d7B5A9419712743e326235e3887 |
+| BimaCore           | 0x4c75a60377c5b9684362D8ED56C7a6439a4966A0 |
+| PriceFeed          | 0xdA9Ab7D4BFbE63c76351C767Ca85F7F4EF7fC2e9 |
+| FeeReceiver        | 0x0E9B3208BBc81C18ED32a72e6Aa9505bfeB85eD9 |
+| InterimAdmin       | 0x70e452a33558B45D5CCD5d57FE76B4B69f5707CE |
+| Gas Pool           | 0x07C4B0dB9c020296275dcEb6381397aC58bBf5C7 |
+| Factory            | 0x9F0bAA382BAEe03cF1245d4E9090945e60FA50Ef |
+| LiquidationManager | 0x3727B070800B2ca1b496e394Cc9b1F593aaB6b7E |
+| DebtToken          | 0x1907FA957442bDa7B082089c948d6055753B83Ec |
+| BorrowerOperations | 0xd48d4178672354b2e075d632ABdD30550a69635e |
+| StabilityPool      | 0xC2D07bd8DF5F33453e9ad4E77436b3eB70a09616 |
+| TroveManager       | 0x0C02D76404Bf28a82e2206fA0Afb333b4116eDac |
+| SortedTroves       | 0xc29eC2c56f2D94c30ba1Be9A2bCc1bcA06B30D63 |
+| TokenLocker        | 0x75F6420a198a95700226e7285B5E0b508E3b4Fd8 |
+| IncentiveVoting    | 0xCED482d8464b1B58f3a1eb7fB61BA5AB0011C4C9 |
+| BimaToken          | 0x92F3cea7f49baffBd58f0ee79129EAf849C46695 |
+| BimaVault          | 0x6d027404184B1bde19e87cfB2586f04D2Ec572F0 |
 | BimaFaucet         | 0x1503e25A71923A6d349a1a267ABC82587B11be6d |
 
 | Collateral Name | Collateral Address                         | TroveManager Address                       | Oracle Address (Chainlink)                 |
 | --------------- | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
-| Bima Mock BTC   | 0xF2f5354B51AcF096df9eCaeBfEEF050922FaDf49 | 0xB39403dE269198651837f54501Bc28f55Cfc4ee2 | 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43 |
-| SolvBTC         | 0xE33109766662932a26d978123383ff9E7bdeF346 | 0x509aAb1A2501Ee6ce056De0D517Fc1ee44D45933 | 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43 |
-| nBTC            | 0xA229EaE06B1F8137461A9D309478da3C8d910E53 | 0x80348B8F4EFfB4C8992e577Ad506e5b77348Db5c | 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43 |
+| Bima Mock BTC   | 0xF2f5354B51AcF096df9eCaeBfEEF050922FaDf49 | 0x29F77DD34eCad25Ad5E1D7684e46F034A4Da828d | 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43 |
 
 ## Polygon zkEVM Cardona Testnet
 
@@ -894,27 +893,27 @@
 
 | Core Contracts     | Address                                    |
 | ------------------ | ------------------------------------------ |
-| BimaCore           | 0x466C92d5bf1Adc11D62e08e3CAae6DB2b7D42A85 |
-| PriceFeed          | 0xEdd95b1325140Eb6c06d8C738DE98accb2104dFB |
-| FeeReceiver        | 0x5622b9036d762979FF50b3B131ad3F9a1Dc4c1A2 |
-| InterimAdmin       | 0x8b6a055BcF85203e320A62b0D1baEbBa0AA5ef13 |
-| Gas Pool           | 0x340460Fdf8b8173fBfA0Ede60c0E013dF23bc81A |
-| Factory            | 0xbDC10467B80C8CF86243D818c10a23Da6af85f2B |
-| LiquidationManager | 0x4B2e2E04CeF598cAE566359897559B2cF6678d3f |
-| DebtToken          | 0x5F4aF136342B4A56fB2dAb7B8a453F9CB8900663 |
-| BorrowerOperations | 0x98cb20D30da0389028EB71eF299B688979F5cB8b |
-| StabilityPool      | 0x4608fb6aBCf7841855A8E797B7E1fc08Ab9a1E67 |
-| TroveManager       | 0x6539C23868dc9Ac70f78a6034af853476477BcEc |
-| SortedTroves       | 0x96F0EaCF9097fcEA88bDe9de3f7E8B215f6757Df |
-| TokenLocker        | 0x0bA523Cd5Aa725C66C3FE015BD52e7A16D3Fdb32 |
-| IncentiveVoting    | 0xEc63b8a3a2402892d3E6AB97b89CF47132a29dAa |
-| BimaToken          | 0x0BB0aA6Aa3A3FD4F7a43FB5e3d90bF9e6B4ef799 |
-| BimaVault          | 0x15e47CF518073bd980f10a1064231db14238858A |
+| BimaCore           | 0xA385C1494F7540CF3e6e35C0FBcCab2Fa6696C9C |
+| PriceFeed          | 0xb3A2c6ca9093Aaf13f752735E0759e3cA17002E3 |
+| FeeReceiver        | 0xb50b156c2f9418DE5c38Ca9070Ef2c3FA5e1AFA2 |
+| InterimAdmin       | 0x1503e25A71923A6d349a1a267ABC82587B11be6d |
+| Gas Pool           | 0x2B9eB679Aeb4Ede15D7ad14E78AD6eA0500a4d6b |
+| Factory            | 0xABE0A00EA09Ab76Bcd43f2105bFB7da6db1c8431 |
+| LiquidationManager | 0x3F3De2CFd9Dd9282c4a3e8c79dBFF40e7f0ff8A5 |
+| DebtToken          | 0xcc5ad941bcf9c839926dC89bF05107B115C37D9c |
+| BorrowerOperations | 0xc38B60716E634080d95eB8a921D4CFd07CeD881E |
+| StabilityPool      | 0x931910D714e0Bee05e54d6449cfB81D08b047556 |
+| TroveManager       | 0x3FF194Ad53605dD6838F4b91760915340ab75441 |
+| SortedTroves       | 0xc0b21504aBf9a523a6E795d38Cac70e7fdcDAbB4 |
+| TokenLocker        | 0x691F17519E79866b5f1f6963D7Ed860900f8508a |
+| IncentiveVoting    | 0x83EfF2d2Bb50101669F76Fa62B7D84cF84FAbe14 |
+| BimaToken          | 0x727152232FF02b3E4724B841fa3FB77f666ae509 |
+| BimaVault          | 0xE8f24c0F98096cF2920F787A0D419Ff759c66860 |
 | BimaFaucet         | 0xE66E60c64d7295e5CB5d1C00A3531ff33e8B09ce |
 
 | Collateral Name | Collateral Address                         | TroveManager Address                       | Oracle Address (Stork Wrapper)             |
 | --------------- | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
-| Bima Mock BTC   | 0xacBce5cFD3703E6F6e59f596deF42feDBCfD964E | 0xBc78150ea2C7F2d5AAf9312dF13548D5b1D2B04B | 0xE20B0B5E240910Ca1461893542C6F226793aAD25 |
+| Bima Mock BTC   | 0xacBce5cFD3703E6F6e59f596deF42feDBCfD964E | 0x702dF4B9d42c27237a1527CF874b7fa14588Fca9 | 0xE20B0B5E240910Ca1461893542C6F226793aAD25 |
 
 ## Manta Pacific Sepolia Testnet
 
