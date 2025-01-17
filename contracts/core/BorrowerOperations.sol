@@ -391,6 +391,7 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
             vars.collDepositWrapped,
             vars.collWithdrawalWrapped
         );
+        vars.collChange = wrapper.previewUnwrappedAmount(vars.collChangeWrapped);
         vars.netDebtChange = _debtChange;
         vars.debtChange = _debtChange;
         vars.account = account;
@@ -426,8 +427,6 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
         if (!_isDebtIncrease && _debtChange > 0) {
             _requireAtLeastMinNetDebt(_getNetDebt(vars.debt) - vars.netDebtChange);
         }
-
-        vars.collChange = wrapper.previewUnwrappedAmount(vars.collChangeWrapped);
 
         // If we are increasing collateral, send tokens to the trove manager prior to adjusting the trove
         if (vars.isCollIncrease) collateralToken.safeTransferFrom(msg.sender, address(troveManager), vars.collChange);
