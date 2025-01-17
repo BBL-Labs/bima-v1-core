@@ -100,6 +100,7 @@ interface ITroveManager is IBimaBase, IBimaOwnable, ISystemStart, IEmissionRecei
 
     function openTrove(
         address _borrower,
+        uint256 _collateralWrappedAmount,
         uint256 _collateralAmount,
         uint256 _compositeDebt,
         uint256 NICR,
@@ -146,6 +147,7 @@ interface ITroveManager is IBimaBase, IBimaOwnable, ISystemStart, IEmissionRecei
         uint256 _netDebtChange,
         bool _isCollIncrease,
         uint256 _collChange,
+        uint256 _collChangeWrapped,
         address _upperHint,
         address _lowerHint,
         address _borrower,

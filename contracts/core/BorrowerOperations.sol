@@ -9,7 +9,11 @@ import {DelegatedOps} from "../dependencies/DelegatedOps.sol";
 import {BIMA_DECIMAL_PRECISION} from "../dependencies/Constants.sol";
 import {IBorrowerOperations, ITroveManager, IDebtToken} from "../interfaces/IBorrowerOperations.sol";
 
+import {TokenWrapperFactory, TokenWrapper} from "../wrappers/TokenWrapper.sol";
+
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
+
+import {console} from "forge-std/console.sol";
 
 /**
     @title Bima Borrower Operations
@@ -24,6 +28,9 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
 
     IDebtToken public immutable debtToken;
     address public immutable factory;
+
+    TokenWrapperFactory public immutable tokenWrapperFactory;
+
     uint256 public minNetDebt;
 
     mapping(ITroveManager => TroveManagerData) public troveManagersData;
@@ -39,6 +46,7 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
         uint256 totalPricedCollateral;
         uint256 totalDebt;
         uint256 collChange;
+        uint256 collChangeWrapped;
         uint256 netDebtChange;
         bool isCollIncrease;
         uint256 debt;
@@ -49,6 +57,8 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
         uint256 debtChange;
         address account;
         uint256 MCR;
+        uint256 collDepositWrapped;
+        uint256 collWithdrawalWrapped;
     }
 
     struct LocalVariables_openTrove {
@@ -61,6 +71,7 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
         uint256 NICR;
         uint256 stake;
         uint256 arrayIndex;
+        uint256 collateralWrappedAmount;
     }
 
     constructor(
@@ -68,10 +79,13 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
         address _debtTokenAddress,
         address _factory,
         uint256 _minNetDebt,
-        uint256 _gasCompensation
+        uint256 _gasCompensation,
+        TokenWrapperFactory _tokenWrapperFactory
     ) BimaOwnable(_bimaCore) BimaBase(_gasCompensation) {
         debtToken = IDebtToken(_debtTokenAddress);
         factory = _factory;
+        tokenWrapperFactory = _tokenWrapperFactory;
+
         _setMinNetDebt(_minNetDebt);
     }
 
@@ -194,6 +208,8 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
             isRecoveryMode
         ) = _getCollateralAndTCRData(troveManager);
 
+        vars.collateralWrappedAmount = _getWrapper(collateralToken).previewWrappedAmount(_collateralAmount);
+
         vars.netDebt = _debtAmount;
 
         if (!isRecoveryMode) {
@@ -211,8 +227,8 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
         // ICR is based on the composite debt, i.e. the requested Debt amount + Debt borrowing fee + Debt gas comp.
         vars.compositeDebt = _getCompositeDebt(vars.netDebt);
 
-        vars.ICR = BimaMath._computeCR(_collateralAmount, vars.compositeDebt, vars.price);
-        vars.NICR = BimaMath._computeNominalCR(_collateralAmount, vars.compositeDebt);
+        vars.ICR = BimaMath._computeCR(vars.collateralWrappedAmount, vars.compositeDebt, vars.price);
+        vars.NICR = BimaMath._computeNominalCR(vars.collateralWrappedAmount, vars.compositeDebt);
 
         // ICR = Individual Collateral Ratio
         // MCR = Minimum Collateral Ratio for individual troves (see TroveManager.sol)
@@ -227,7 +243,7 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
             uint256 newTCR = _getNewTCRFromTroveChange(
                 vars.totalPricedCollateral,
                 vars.totalDebt,
-                _collateralAmount * vars.price,
+                vars.collateralWrappedAmount * vars.price,
                 true,
                 vars.compositeDebt,
                 true
@@ -236,10 +252,14 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
             _requireNewTCRisAboveCCR(newTCR);
         }
 
+        // Move the collateral to the Trove Manager
+        collateralToken.safeTransferFrom(msg.sender, address(troveManager), _collateralAmount);
+
         // Create the trove
         (vars.stake, vars.arrayIndex) = troveManager.openTrove(
             account,
             _collateralAmount,
+            vars.collateralWrappedAmount,
             vars.compositeDebt,
             vars.NICR,
             _upperHint,
@@ -249,13 +269,16 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
 
         emit TroveCreated(account, vars.arrayIndex);
 
-        // Move the collateral to the Trove Manager
-        collateralToken.safeTransferFrom(msg.sender, address(troveManager), _collateralAmount);
-
         // and mint the DebtAmount to the caller and gas compensation for Gas Pool
         debtToken.mintWithGasCompensation(msg.sender, _debtAmount);
 
-        emit TroveUpdated(account, vars.compositeDebt, _collateralAmount, vars.stake, BorrowerOperation.openTrove);
+        emit TroveUpdated(
+            account,
+            vars.compositeDebt,
+            vars.collateralWrappedAmount,
+            vars.stake,
+            BorrowerOperation.openTrove
+        );
     }
 
     // Send collateral to a trove
@@ -358,10 +381,18 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
             isRecoveryMode
         ) = _getCollateralAndTCRData(troveManager);
 
+        TokenWrapper wrapper = _getWrapper(collateralToken);
+
+        vars.collDepositWrapped = wrapper.previewWrappedAmount(_collDeposit);
+        vars.collWithdrawalWrapped = wrapper.previewWrappedAmount(_collWithdrawal);
+
         (vars.coll, vars.debt) = troveManager.applyPendingRewards(account);
 
         // Get the collChange based on whether or not collateral was sent in the transaction
-        (vars.collChange, vars.isCollIncrease) = _getCollChange(_collDeposit, _collWithdrawal);
+        (vars.collChangeWrapped, vars.isCollIncrease) = _getCollChange(
+            vars.collDepositWrapped,
+            vars.collWithdrawalWrapped
+        );
         vars.netDebtChange = _debtChange;
         vars.debtChange = _debtChange;
         vars.account = account;
@@ -388,7 +419,7 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
             vars.totalPricedCollateral,
             vars.totalDebt,
             isRecoveryMode,
-            _collWithdrawal,
+            vars.collWithdrawalWrapped,
             _isDebtIncrease,
             vars
         );
@@ -408,6 +439,7 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
             vars.netDebtChange,
             vars.isCollIncrease,
             vars.collChange,
+            vars.collChangeWrapped,
             _upperHint,
             _lowerHint,
             vars.account,
@@ -649,5 +681,9 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
     function getGlobalSystemBalances() external returns (uint256 totalPricedCollateral, uint256 totalDebt) {
         SystemBalances memory balances = fetchBalances();
         (, totalPricedCollateral, totalDebt) = _getTCRData(balances);
+    }
+
+    function _getWrapper(IERC20 _collateralToken) internal view returns (TokenWrapper tokenWrapper) {
+        tokenWrapper = tokenWrapperFactory.getWrapper(_collateralToken);
     }
 }
