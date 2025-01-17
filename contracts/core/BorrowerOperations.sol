@@ -13,8 +13,6 @@ import {TokenWrapperFactory, TokenWrapper} from "../wrappers/TokenWrapper.sol";
 
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
-import {console} from "forge-std/console.sol";
-
 /**
     @title Bima Borrower Operations
     @notice Based on Liquity's `BorrowerOperations`
@@ -428,6 +426,8 @@ contract BorrowerOperations is IBorrowerOperations, BimaBase, BimaOwnable, Deleg
         if (!_isDebtIncrease && _debtChange > 0) {
             _requireAtLeastMinNetDebt(_getNetDebt(vars.debt) - vars.netDebtChange);
         }
+
+        vars.collChange = wrapper.previewUnwrappedAmount(vars.collChangeWrapped);
 
         // If we are increasing collateral, send tokens to the trove manager prior to adjusting the trove
         if (vars.isCollIncrease) collateralToken.safeTransferFrom(msg.sender, address(troveManager), vars.collChange);
