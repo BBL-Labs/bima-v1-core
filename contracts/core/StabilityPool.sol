@@ -8,8 +8,6 @@ import {BimaMath} from "../dependencies/BimaMath.sol";
 import {BIMA_DECIMAL_PRECISION, BIMA_SCALE_FACTOR, BIMA_REWARD_DURATION} from "../dependencies/Constants.sol";
 import {IStabilityPool, IDebtToken, IBimaVault, IERC20} from "../interfaces/IStabilityPool.sol";
 
-import {TokenWrapperFactory, TokenWrapper} from "../wrappers/TokenWrapper.sol";
-
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
 /**
@@ -36,8 +34,6 @@ contract StabilityPool is IStabilityPool, BimaOwnable, SystemStart {
     IBimaVault public immutable vault;
     address public immutable factory;
     address public immutable liquidationManager;
-
-    TokenWrapperFactory public immutable tokenWrapperFactory;
 
     // public
     //
@@ -148,15 +144,13 @@ contract StabilityPool is IStabilityPool, BimaOwnable, SystemStart {
         IDebtToken _debtTokenAddress,
         IBimaVault _vault,
         address _factory,
-        address _liquidationManager,
-        TokenWrapperFactory _tokenWrapperFactory
+        address _liquidationManager
     ) BimaOwnable(_bimaCore) SystemStart(_bimaCore) {
         debtToken = _debtTokenAddress;
         vault = _vault;
         factory = _factory;
         liquidationManager = _liquidationManager;
         periodFinish = uint32(block.timestamp - 1);
-        tokenWrapperFactory = _tokenWrapperFactory;
     }
 
     function enableCollateral(IERC20 _collateral) external {
@@ -806,11 +800,9 @@ contract StabilityPool is IStabilityPool, BimaOwnable, SystemStart {
                 collateralGains[collateralIndex] = gains;
                 depositorGains[collateralIndex] = 0;
 
-                IERC20 collateralToken = collateralTokens[collateralIndex];
-
-                uint256 unwrappedAmount = tokenWrapperFactory.getWrapper(collateralToken).unwrap(gains);
-
-                collateralToken.safeTransfer(recipient, unwrappedAmount);
+                // unwrap isn't needed here because the TroveManager
+                // already does unwrapping before sending collateral to SP
+                collateralTokens[collateralIndex].safeTransfer(recipient, gains);
             }
             unchecked {
                 ++i;
