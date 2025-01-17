@@ -14,6 +14,13 @@ import {BIMA_100_PCT} from "../dependencies/Constants.sol";
             each of which hold one collateral type which may be used to mint this token.
  */
 contract DebtToken is OFT {
+    event SetLendingVaultAdapterAddress(
+        address indexed _caller,
+        address indexed _previousAddress,
+        address indexed _newAddress,
+        uint256 _timestamp
+    );
+
     string public constant version = "1";
 
     // --- ERC 3156 Data ---
@@ -88,13 +95,21 @@ contract DebtToken is OFT {
 
     function setLendingVaultAdapterAddress(address _lendingVaultAdapterAddress) external {
         require(msg.sender == _bimaCore.owner(), "Only owner");
+
+        emit SetLendingVaultAdapterAddress(
+            msg.sender,
+            lendingVaultAdapterAddress,
+            _lendingVaultAdapterAddress,
+            block.timestamp
+        );
+
         lendingVaultAdapterAddress = _lendingVaultAdapterAddress;
     }
 
     // --- Functions for intra-Bima calls ---
 
     function mintWithGasCompensation(address _account, uint256 _amount) external returns (bool success) {
-        require(msg.sender == borrowerOperationsAddress);
+        require(msg.sender == borrowerOperationsAddress, "Debt: Caller not BO");
         _mint(_account, _amount);
         _mint(gasPool, DEBT_GAS_COMPENSATION);
 
@@ -102,7 +117,7 @@ contract DebtToken is OFT {
     }
 
     function burnWithGasCompensation(address _account, uint256 _amount) external returns (bool success) {
-        require(msg.sender == borrowerOperationsAddress);
+        require(msg.sender == borrowerOperationsAddress, "Debt: Caller not BO");
         _burn(_account, _amount);
         _burn(gasPool, DEBT_GAS_COMPENSATION);
 
@@ -154,10 +169,11 @@ contract DebtToken is OFT {
 
     /**
      * @dev Returns the maximum amount of tokens available for loan.
+     * @param token The address of the token to be loaned.
      * @return maxLoan The amount of token that can be loaned.
      */
-    function maxFlashLoan() public view returns (uint256 maxLoan) {
-        maxLoan = type(uint256).max - totalSupply();
+    function maxFlashLoan(address token) public view returns (uint256 maxLoan) {
+        maxLoan = token == address(this) ? type(uint256).max - totalSupply() : 0;
     }
 
     /**
@@ -167,8 +183,8 @@ contract DebtToken is OFT {
      * @param amount The amount of tokens to be loaned.
      * @return fee The fees applied to the corresponding flash loan.
      */
-    function flashFee(uint256 amount) external pure returns (uint256 fee) {
-        fee = _flashFee(amount);
+    function flashFee(address token, uint256 amount) external view returns (uint256 fee) {
+        fee = token == address(this) ? _flashFee(amount) : 0;
     }
 
     /**
@@ -203,7 +219,7 @@ contract DebtToken is OFT {
         uint256 amount,
         bytes calldata data
     ) external returns (bool success) {
-        require(amount <= maxFlashLoan(), "ERC20FlashMint: amount exceeds maxFlashLoan");
+        require(amount <= maxFlashLoan(address(this)), "ERC20FlashMint: amount exceeds maxFlashLoan");
         uint256 fee = _flashFee(amount);
         _mint(address(receiver), amount);
         require(

@@ -55,7 +55,7 @@ contract BimaToken is OFT, IERC2612 {
     }
 
     function mintToVault(uint256 _totalSupply) external returns (bool success) {
-        require(msg.sender == vault);
+        require(msg.sender == vault, "!vault");
         require(maxTotalSupply == 0);
 
         _mint(vault, _totalSupply);

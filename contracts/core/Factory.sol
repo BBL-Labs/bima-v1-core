@@ -9,6 +9,7 @@ import {BIMA_COLLATERAL_DECIMALS} from "../dependencies/Constants.sol";
 import {ITroveManager} from "../interfaces/ITroveManager.sol";
 import {ISortedTroves} from "../interfaces/ISortedTroves.sol";
 import {IFactory, IDebtToken, ILiquidationManager, IBorrowerOperations, IStabilityPool} from "../interfaces/IFactory.sol";
+import {TokenWrapperFactory} from "../wrappers/TokenWrapper.sol";
 
 /**
     @title Bima Trove Factory
@@ -24,6 +25,8 @@ contract Factory is IFactory, BimaOwnable {
     ILiquidationManager public immutable liquidationManager;
     IBorrowerOperations public immutable borrowerOperations;
 
+    TokenWrapperFactory public immutable tokenWrapperFactory;
+
     // implementation contracts, redeployed each time via clone proxy
     address public sortedTrovesImpl;
     address public troveManagerImpl;
@@ -37,7 +40,8 @@ contract Factory is IFactory, BimaOwnable {
         IBorrowerOperations _borrowerOperations,
         address _sortedTroves,
         address _troveManager,
-        ILiquidationManager _liquidationManager
+        ILiquidationManager _liquidationManager,
+        TokenWrapperFactory _tokenWrapperFactory
     ) BimaOwnable(_bimaCore) {
         debtToken = _debtToken;
         stabilityPool = _stabilityPool;
@@ -46,6 +50,8 @@ contract Factory is IFactory, BimaOwnable {
         sortedTrovesImpl = _sortedTroves;
         troveManagerImpl = _troveManager;
         liquidationManager = _liquidationManager;
+
+        tokenWrapperFactory = _tokenWrapperFactory;
     }
 
     function troveManagerCount() external view returns (uint256 count) {
@@ -75,7 +81,8 @@ contract Factory is IFactory, BimaOwnable {
         DeploymentParams memory params
     ) external onlyOwner {
         IERC20Metadata collateralToken = IERC20Metadata(collateral);
-        require(collateralToken.decimals() == BIMA_COLLATERAL_DECIMALS, "Invalid collateral decimals");
+
+        tokenWrapperFactory.createWrapper(collateral);
 
         address implementation = customTroveManagerImpl == address(0) ? troveManagerImpl : customTroveManagerImpl;
         address troveManager = implementation.cloneDeterministic(bytes32(bytes20(collateral)));

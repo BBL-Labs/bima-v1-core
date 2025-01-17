@@ -91,7 +91,7 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         state.userSBTCBal = stakedBTC.balanceOf(user);
         state.userDebtTokenBal = debtToken.balanceOf(user);
         state.gasPoolDebtTokenBal = debtToken.balanceOf(users.gasPool);
-        state.troveMgrSBTCBal = stakedBTC.balanceOf(address(stakedBTCTroveMgr));
+        state.troveMgrSBTCBal = _wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr));
         state.sysBalances = borrowerOps.fetchBalances();
 
         assertEq(state.sysBalances.collaterals.length, 1);
@@ -148,7 +148,10 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         assertEq(debtToken.balanceOf(users.gasPool), statePre.gasPoolDebtTokenBal + INIT_GAS_COMPENSATION);
 
         // verify TroveManager received collateral tokens
-        assertEq(stakedBTC.balanceOf(address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal + collateralAmount);
+        assertEq(
+            _wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr)),
+            statePre.troveMgrSBTCBal + collateralAmount
+        );
 
         // verify system balances
         IBorrowerOperations.SystemBalances memory balances = borrowerOps.fetchBalances();
@@ -279,7 +282,10 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         assertEq(debtToken.balanceOf(users.gasPool), statePre.gasPoolDebtTokenBal + INIT_GAS_COMPENSATION);
 
         // verify TroveManager received collateral tokens
-        assertEq(stakedBTC.balanceOf(address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal + collateralAmount);
+        assertEq(
+            _wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr)),
+            statePre.troveMgrSBTCBal + collateralAmount
+        );
 
         // verify system balances
         IBorrowerOperations.SystemBalances memory balances = borrowerOps.fetchBalances();
@@ -364,7 +370,10 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         assertEq(debtToken.balanceOf(users.gasPool), statePre.gasPoolDebtTokenBal);
 
         // verify TroveManager received additional collateral tokens
-        assertEq(stakedBTC.balanceOf(address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal + addedCollateral);
+        assertEq(
+            _wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr)),
+            statePre.troveMgrSBTCBal + addedCollateral
+        );
 
         // verify system balances
         IBorrowerOperations.SystemBalances memory sysBalancesPost = borrowerOps.fetchBalances();
@@ -405,7 +414,10 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         assertEq(debtToken.balanceOf(users.gasPool), statePre.gasPoolDebtTokenBal);
 
         // verify TroveManager sent withdrawn collateral tokens
-        assertEq(stakedBTC.balanceOf(address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal - withdrawnCollateral);
+        assertEq(
+            _wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr)),
+            statePre.troveMgrSBTCBal - withdrawnCollateral
+        );
 
         // verify user received withdrawn collateral tokens
         assertEq(stakedBTC.balanceOf(users.user1), statePre.userSBTCBal + withdrawnCollateral);
@@ -471,7 +483,7 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         assertEq(debtToken.balanceOf(users.gasPool), statePre.gasPoolDebtTokenBal);
 
         // verify TroveManager collateral tokens unchanged
-        assertEq(stakedBTC.balanceOf(address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal);
+        assertEq(_wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal);
 
         // verify user collateral tokens unchanged
         assertEq(stakedBTC.balanceOf(users.user1), statePre.userSBTCBal);
@@ -564,7 +576,10 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         assertEq(debtToken.balanceOf(users.gasPool), statePre.gasPoolDebtTokenBal - INIT_GAS_COMPENSATION);
 
         // verify TroveManager collateral tokens reduced by closed trove
-        assertEq(stakedBTC.balanceOf(address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal - actualCollateralAmount);
+        assertEq(
+            _wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr)),
+            statePre.troveMgrSBTCBal - actualCollateralAmount
+        );
 
         // verify user received collateral tokens
         assertEq(stakedBTC.balanceOf(users.user1), statePre.userSBTCBal + actualCollateralAmount);
@@ -613,7 +628,7 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         assertEq(debtToken.balanceOf(users.gasPool), statePre.gasPoolDebtTokenBal);
 
         // verify TroveManager has collateral tokens unchanged
-        assertEq(stakedBTC.balanceOf(address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal);
+        assertEq(_wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal);
 
         // verify user collateral tokens unchanged
         assertEq(stakedBTC.balanceOf(users.user1), statePre.userSBTCBal);
@@ -641,6 +656,10 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         // still can't remove as one open trove remains
         vm.expectRevert("Trove Manager cannot be removed");
         borrowerOps.removeTroveManager(stakedBTCTroveMgr);
+
+        deal(address(stakedBTC), users.user1, 1e18, true);
+        vm.prank(users.user1);
+        stakedBTC.approve(address(borrowerOps), 1e18);
 
         // verify new trove can't be opened while sunsetting
         vm.expectRevert("Cannot open while sunsetting");
@@ -1428,7 +1447,10 @@ contract BorrowerOperationsTest is StabilityPoolTest {
         assertEq(debtToken.balanceOf(users.gasPool), statePre.gasPoolDebtTokenBal + INIT_GAS_COMPENSATION);
 
         // verify TroveManagers collateral tokens
-        assertEq(stakedBTC.balanceOf(address(stakedBTCTroveMgr)), statePre.troveMgrSBTCBal + _finalColl);
+        assertEq(
+            _wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr)),
+            statePre.troveMgrSBTCBal + _finalColl
+        );
 
         if (_finalColl < actualInitialCollateralAmount)
             assertEq(stakedBTC.balanceOf(users.user1), actualInitialCollateralAmount - _finalColl);
@@ -1501,7 +1523,7 @@ contract BorrowerOperationsTest is StabilityPoolTest {
 
             // verify TroveManagers collateral tokens
             assertEq(
-                stakedBTC.balanceOf(address(stakedBTCTroveMgr)),
+                _wrapperTokenBalance(address(stakedBTC), address(stakedBTCTroveMgr)),
                 statePre.troveMgrSBTCBal + actualInitialCollateralAmount
             );
 

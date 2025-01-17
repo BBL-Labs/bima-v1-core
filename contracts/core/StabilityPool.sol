@@ -800,6 +800,8 @@ contract StabilityPool is IStabilityPool, BimaOwnable, SystemStart {
                 collateralGains[collateralIndex] = gains;
                 depositorGains[collateralIndex] = 0;
 
+                // unwrap isn't needed here because the TroveManager
+                // already does unwrapping before sending collateral to SP
                 collateralTokens[collateralIndex].safeTransfer(recipient, gains);
             }
             unchecked {
@@ -867,7 +869,7 @@ contract StabilityPool is IStabilityPool, BimaOwnable, SystemStart {
     }
 
     function vaultClaimReward(address claimant, address) external returns (uint256 amount) {
-        require(msg.sender == address(vault));
+        require(msg.sender == address(vault), "!vault");
 
         amount = _claimReward(claimant);
     }

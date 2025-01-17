@@ -456,7 +456,7 @@ contract IncentiveVoting is IIncentiveVoting, DelegatedOps, SystemStart {
      */
     function unfreeze(address account, bool keepVote) external returns (bool success) {
         // only tokenLocker can call this function
-        require(msg.sender == address(tokenLocker));
+        require(msg.sender == address(tokenLocker), "!tokenLocker");
 
         // get storage reference to account's lock data
         AccountData storage accountData = accountLockData[account];

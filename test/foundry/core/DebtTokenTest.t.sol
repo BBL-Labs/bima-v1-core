@@ -11,9 +11,16 @@ contract DebtTokenTest is IERC3156FlashBorrower, TestSetup {
     uint256 internal constant MIN_AMOUNT = 1e18;
     uint256 internal constant MAX_AMOUNT = 1_000_000_000_000e18;
 
+    function test_flashLoanFee_invalid_token(address _token, uint256 _borrowAmount) external view {
+        vm.assume(_token != address(debtToken));
+
+        assertEq(debtToken.maxFlashLoan(_token), 0);
+        assertEq(debtToken.flashFee(_token, _borrowAmount), 0);
+    }
+
     function test_flashLoanFee() external {
         // entire supply initially available to borrow
-        assertEq(debtToken.maxFlashLoan(), type(uint256).max);
+        assertEq(debtToken.maxFlashLoan(address(debtToken)), type(uint256).max);
 
         // expected fee for borrowing 1e18
         uint256 borrowAmount = MIN_AMOUNT;
@@ -23,7 +30,7 @@ contract DebtTokenTest is IERC3156FlashBorrower, TestSetup {
         assertTrue(expectedFee > 0);
 
         // fee should be exactly equal
-        assertEq(debtToken.flashFee(borrowAmount), expectedFee);
+        assertEq(debtToken.flashFee(address(debtToken), borrowAmount), expectedFee);
 
         // attempt to exploit rounding down to zero precision loss
         // to get free flash loans by borrowing in small amounts - since
@@ -31,7 +38,7 @@ contract DebtTokenTest is IERC3156FlashBorrower, TestSetup {
         // multiple times to borrow larger amounts at zero fee
         borrowAmount = 1111;
         vm.expectRevert("ERC20FlashMint: amount too small");
-        debtToken.flashFee(borrowAmount);
+        debtToken.flashFee(address(debtToken), borrowAmount);
     }
 
     function test_flashLoan(uint256 amount) external {

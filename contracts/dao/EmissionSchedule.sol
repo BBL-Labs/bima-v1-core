@@ -103,7 +103,7 @@ contract EmissionSchedule is IEmissionSchedule, BimaOwnable, SystemStart {
         uint256 unallocatedTotal
     ) external returns (uint256 amount, uint64 lock) {
         // only vault can call this function
-        require(msg.sender == address(vault));
+        require(msg.sender == address(vault), "!vault");
 
         // apply the lock week decay
         //

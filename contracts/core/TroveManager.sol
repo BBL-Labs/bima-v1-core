@@ -12,6 +12,8 @@ import {BimaMath} from "../dependencies/BimaMath.sol";
 import {BimaOwnable} from "../dependencies/BimaOwnable.sol";
 import {BIMA_100_PCT, BIMA_DECIMAL_PRECISION, BIMA_REWARD_DURATION} from "../dependencies/Constants.sol";
 
+import {TokenWrapperFactory, TokenWrapper} from "../wrappers/TokenWrapper.sol";
+
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
 /**
@@ -61,6 +63,8 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
     address immutable gasPoolAddress;
     IDebtToken public immutable debtToken;
     IBimaVault public immutable vault;
+
+    TokenWrapperFactory public immutable tokenWrapperFactory;
 
     IPriceFeed public priceFeed;
     IERC20 public collateralToken;
@@ -211,19 +215,21 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
         address _borrowerOperationsAddress,
         address _vault,
         address _liquidationManager,
-        uint256 _gasCompensation
+        uint256 _gasCompensation,
+        TokenWrapperFactory _tokenWrapperFactory
     ) BimaOwnable(_bimaCore) BimaBase(_gasCompensation) SystemStart(_bimaCore) {
         gasPoolAddress = _gasPoolAddress;
         debtToken = IDebtToken(_debtTokenAddress);
         borrowerOperationsAddress = _borrowerOperationsAddress;
         vault = IBimaVault(_vault);
         liquidationManager = _liquidationManager;
+        tokenWrapperFactory = _tokenWrapperFactory;
     }
 
     function setAddresses(address _priceFeedAddress, address _sortedTrovesAddress, address _collateralToken) external {
         // Factory::deployNewInstance calls this once when new TroveManager
         // deployed so even without access control it can't be called again
-        require(address(sortedTroves) == address(0));
+        require(address(sortedTroves) == address(0), "TroveManager: Addresses already set");
 
         priceFeed = IPriceFeed(_priceFeedAddress);
         sortedTroves = ISortedTroves(_sortedTrovesAddress);
@@ -238,7 +244,7 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
     function notifyRegisteredId(uint256[] calldata _assignedIds) external returns (bool success) {
         // called by BimaVault when the TroveManager is registered
         // as an emissions receiver
-        require(msg.sender == address(vault));
+        require(msg.sender == address(vault), "!vault");
 
         // prevent vault from calling this multiple times
         require(emissionId.debt == 0, "Already assigned");
@@ -333,10 +339,17 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
 
         require(
             _minuteDecayFactor >= 977159968434245000 && // half-life of 30 minutes
-                _minuteDecayFactor <= 999931237762985000 // half-life of 1 week
+                _minuteDecayFactor <= 999931237762985000, // half-life of 1 week
+            "_minuteDecayFactor out of range"
         );
-        require(_redemptionFeeFloor <= _maxRedemptionFee && _maxRedemptionFee <= BIMA_DECIMAL_PRECISION);
-        require(_borrowingFeeFloor <= _maxBorrowingFee && _maxBorrowingFee <= BIMA_DECIMAL_PRECISION);
+        require(
+            _redemptionFeeFloor <= _maxRedemptionFee && _maxRedemptionFee <= BIMA_DECIMAL_PRECISION,
+            "Redemption fees out of range"
+        );
+        require(
+            _borrowingFeeFloor <= _maxBorrowingFee && _maxBorrowingFee <= BIMA_DECIMAL_PRECISION,
+            "Borrowing fees out of range"
+        );
 
         // checks with storage reads next
         require(!sunsetting, "Cannot change after sunset");
@@ -879,7 +892,9 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
 
         surplusBalances[msg.sender] = 0;
 
-        collateralToken.safeTransfer(_receiver, claimableColl);
+        uint256 unwrappedAmount = _getWrapper().unwrap(claimableColl);
+
+        collateralToken.safeTransfer(_receiver, unwrappedAmount);
     }
 
     // --- Reward Claim functions ---
@@ -894,7 +909,7 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
     }
 
     function vaultClaimReward(address claimant, address) external returns (uint256 amount) {
-        require(msg.sender == address(vault));
+        require(msg.sender == address(vault), "!vault");
 
         amount = _claimReward(claimant);
     }
@@ -1015,6 +1030,7 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
     function openTrove(
         address _borrower,
         uint256 _collateralAmount,
+        uint256 _collateralWrappedAmount,
         uint256 _compositeDebt,
         uint256 NICR,
         address _upperHint,
@@ -1036,7 +1052,7 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
 
         // update storage - borrower Trove state
         t.status = Status.active;
-        t.coll = _collateralAmount;
+        t.coll = _collateralWrappedAmount;
         t.debt = _compositeDebt;
         t.activeInterestIndex = _accrueActiveInterests();
 
@@ -1055,7 +1071,7 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
         _updateIntegrals(_borrower, 0, totalActiveDebtPre);
         if (!_isRecoveryMode) _updateMintVolume(_borrower, _compositeDebt);
 
-        totalActiveCollateral += _collateralAmount;
+        totalActiveCollateral += _collateralWrappedAmount;
 
         // enforce collateral debt limit
         uint256 _newTotalDebt = totalActiveDebtPre + _compositeDebt;
@@ -1063,6 +1079,9 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
 
         // update storage new total active debt
         totalActiveDebt = _newTotalDebt;
+
+        collateralToken.approve(address(_getWrapper()), _collateralAmount);
+        _getWrapper().wrap(_collateralAmount);
     }
 
     function updateTroveFromAdjustment(
@@ -1072,6 +1091,7 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
         uint256 _netDebtChange,
         bool _isCollIncrease,
         uint256 _collChange,
+        uint256 _collChangeWrapped,
         address _upperHint,
         address _lowerHint,
         address _borrower,
@@ -1112,12 +1132,15 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
         // if collateral is changing, increase or decrease as required
         if (_collChange > 0) {
             if (_isCollIncrease) {
-                newColl += _collChange;
-                totalActiveCollateral += _collChange;
+                newColl += _collChangeWrapped;
+                totalActiveCollateral += _collChangeWrapped;
+
+                collateralToken.approve(address(_getWrapper()), _collChange);
+                _getWrapper().wrap(_collChange);
                 // trust that BorrowerOperations sent the collateral
             } else {
-                newColl -= _collChange;
-                _sendCollateral(_receiver, _collChange);
+                newColl -= _collChangeWrapped;
+                _sendCollateral(_receiver, _collChangeWrapped);
             }
 
             // update borrower storage with new collateral value
@@ -1420,7 +1443,9 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
             totalActiveCollateral -= _amount;
             emit CollateralSent(_account, _amount);
 
-            collateralToken.safeTransfer(_account, _amount);
+            uint256 unwrappedAmount = _getWrapper().unwrap(_amount);
+
+            collateralToken.safeTransfer(_account, unwrappedAmount);
         }
     }
 
@@ -1493,5 +1518,9 @@ contract TroveManager is ITroveManager, BimaBase, BimaOwnable, SystemStart {
 
     function _requireCallerIsLM() internal view {
         require(msg.sender == liquidationManager, "Not Liquidation Manager");
+    }
+
+    function _getWrapper() internal view returns (TokenWrapper tokenWrapper) {
+        tokenWrapper = tokenWrapperFactory.getWrapper(collateralToken);
     }
 }
