@@ -5,6 +5,8 @@ pragma solidity 0.8.19;
 import {BorrowerOperationsTest, BimaMath, ITroveManager, SafeCast, Math} from "./BorrowerOperationsTest.t.sol";
 import {BIMA_DECIMAL_PRECISION} from "../../../contracts/dependencies/Constants.sol";
 
+import {console} from "forge-std/console.sol";
+
 contract LiquidationManagerTest is BorrowerOperationsTest {
     uint256 internal constant COLL_REDUCTION_FACTOR = 30_000;
     uint256 internal constant LM_100pct = 1000000000000000000;
@@ -285,8 +287,12 @@ contract LiquidationManagerTest is BorrowerOperationsTest {
         // user2 deposit in the stability pool
         assertEq(statePre.stabPoolTotalDebtTokenDeposits, spDepositAmount);
 
+        console.log("vax chemii: ", stakedBTC.balanceOf(address(stabilityPool)));
+
         // liquidate via `liquidate`
         liquidationMgr.liquidate(stakedBTCTroveMgr, users.user1);
+
+        console.log("vax chemii: ", stakedBTC.balanceOf(address(stabilityPool)));
 
         // save after state
         LiquidationState memory statePost = _getLiquidationState(users.user1);
@@ -355,7 +361,11 @@ contract LiquidationManagerTest is BorrowerOperationsTest {
         uint256[] memory collateralIndexes = new uint256[](1);
         collateralIndexes[0] = 0;
         vm.prank(users.user2);
+
+        console.log("CLAIMIIIING");
         stabilityPool.claimCollateralGains(users.user2, collateralIndexes);
+        console.log("CLAIMED");
+
         assertEq(stakedBTC.balanceOf(users.user2), collToSendToStabilityPool);
         assertEq(stakedBTC.balanceOf(address(stabilityPool)), 0);
 

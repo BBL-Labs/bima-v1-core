@@ -42,12 +42,17 @@ import {BimaVault, IEmissionReceiver} from "../../contracts/dao/Vault.sol";
 import {EmissionSchedule} from "../../contracts/dao/EmissionSchedule.sol";
 import {BoostCalculator} from "../../contracts/dao/BoostCalculator.sol";
 
+// wrappers
+import {TokenWrapperFactory, TokenWrapper} from "../../contracts/wrappers/TokenWrapper.sol";
+
 // external
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // foundry
 import {Test} from "forge-std/Test.sol";
+import {console} from "forge-std/console.sol";
 
 struct Users {
     address owner;
@@ -73,6 +78,7 @@ struct DeployAddresses {
     address incentiveVoting;
     address bimaToken;
     address bimaVault;
+    address tokenWrapperFactory;
 }
 
 contract TestSetup is Test {
@@ -105,6 +111,9 @@ contract TestSetup is Test {
     BimaVault internal bimaVault;
     EmissionSchedule internal emissionSchedule;
     BoostCalculator internal boostCalc;
+
+    // wrapper contracts
+    TokenWrapperFactory internal tokenWrapperFactory;
 
     // constants
     uint256 internal constant INIT_MCR = 2e18; // 200%
@@ -192,6 +201,7 @@ contract TestSetup is Test {
         sortedTroves = new SortedTroves();
         ++addresses.nonce;
 
+        addresses.tokenWrapperFactory = vm.computeCreateAddress(users.owner, ++addresses.nonce);
         addresses.factory = vm.computeCreateAddress(users.owner, ++addresses.nonce);
         addresses.liquidationMgr = vm.computeCreateAddress(users.owner, ++addresses.nonce);
         addresses.debtToken = vm.computeCreateAddress(users.owner, ++addresses.nonce);
@@ -203,6 +213,10 @@ contract TestSetup is Test {
         addresses.bimaToken = vm.computeCreateAddress(users.owner, ++addresses.nonce);
         addresses.bimaVault = vm.computeCreateAddress(users.owner, ++addresses.nonce);
 
+        // Token Wrapper Factory
+        tokenWrapperFactory = new TokenWrapperFactory(addresses.factory);
+        assertEq(addresses.tokenWrapperFactory, address(tokenWrapperFactory));
+
         // Factory
         factory = new Factory(
             addresses.core,
@@ -211,7 +225,8 @@ contract TestSetup is Test {
             IBorrowerOperations(addresses.borrowerOps),
             address(sortedTroves),
             addresses.troveMgr,
-            ILiquidationManager(addresses.liquidationMgr)
+            ILiquidationManager(addresses.liquidationMgr),
+            TokenWrapperFactory(addresses.tokenWrapperFactory)
         );
         assertEq(addresses.factory, address(factory));
 
@@ -244,7 +259,8 @@ contract TestSetup is Test {
             addresses.debtToken,
             addresses.factory,
             INIT_MIN_NET_DEBT,
-            INIT_GAS_COMPENSATION
+            INIT_GAS_COMPENSATION,
+            TokenWrapperFactory(addresses.tokenWrapperFactory)
         );
         assertEq(addresses.borrowerOps, address(borrowerOps));
 
@@ -266,7 +282,8 @@ contract TestSetup is Test {
             addresses.borrowerOps,
             addresses.bimaVault,
             addresses.liquidationMgr,
-            INIT_GAS_COMPENSATION
+            INIT_GAS_COMPENSATION,
+            TokenWrapperFactory(addresses.tokenWrapperFactory)
         );
         assertEq(addresses.troveMgr, address(troveMgr));
 
@@ -502,6 +519,11 @@ contract TestSetup is Test {
 
         // Verify MockEmissionReceiver state
         MockEmissionReceiver(receiverAddr).assertNotifyRegisteredIdCalled(count);
+    }
+
+    function _wrapperTokenBalance(address _collateral, address _account) internal returns (uint256 _balance) {
+        TokenWrapper tokenWrapper = tokenWrapperFactory.getWrapper(IERC20(_collateral));
+        _balance = tokenWrapper.balanceOf(_account);
     }
 }
 
